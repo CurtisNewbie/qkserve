@@ -21,4 +21,4 @@
 go.work
 go.work.sum
 
-qkserve_linux
+qkserve_linux_*

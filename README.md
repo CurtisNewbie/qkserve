@@ -1,9 +1,7 @@
 # qkserve
 
-For CentOS:
+For CentOS, e.g.,
 
 ```bash
-curl "https://raw.githubusercontent.com/CurtisNewbie/qkserve/main/tools/centos_cn.sh" -o /tmp/qkserve_centos_cn.sh
-
-/tmp/qkserve_centos_cn.sh -file "myfile.txt" -port 8080
+curl https://raw.githubusercontent.com/CurtisNewbie/qkserve/main/tools/centos_cn.sh | bash -s -port 8080 -file "/tmp/myfile.txt"
 ```

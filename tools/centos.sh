@@ -7,4 +7,4 @@ if [ ! -f "/tmp/qkserve" ]; then
         && curl "$download_qkserve" -L -o /tmp/qkserve \
         && chmod +x /tmp/qkserve
 fi
-./tmp/qkserve -file "$file" -port 443
+/tmp/qkserve -file "$file" -port 443

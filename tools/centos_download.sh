@@ -1,6 +1,7 @@
 #!/bin/bash
 
-download_qkserve="https://github.com/CurtisNewbie/qkserve/releases/download/v0.0.1/qkserve_linux_v0.0.1"
+version="v0.0.1"
+download_qkserve="https://github.com/CurtisNewbie/qkserve/releases/download/$version/qkserve_linux_$version"
 tmp="/tmp/qkserve"
 qkserve="/usr/local/bin/qkserve"
 if [ ! -f "$qkserve" ]; then

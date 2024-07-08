@@ -9,8 +9,7 @@ fi
 
 if [ ! -f "$qkserve" ]; then
     yum install -y curl procps \
-        && curl "$download_qkserve" -L -o "$qkserve" \
-        && chmod +x "$qkserve"
+        && curl "$download_qkserve" -L -o "$qkserve"
 fi
 chmod +x $qkserve
 $qkserve -file "$file" -port 443

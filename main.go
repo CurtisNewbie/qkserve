@@ -15,7 +15,7 @@ import (
 
 var (
 	File    = flag.String("file", "", "file")
-	Port    = flag.Int("port", 8080, "port")
+	Port    = flag.Int("port", 80, "port")
 	OneTime = flag.Bool("one-time", true, "one time use")
 )
 

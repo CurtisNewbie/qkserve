@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version="v0.0.1"
+version="v0.0.2"
 download_qkserve="https://github.com/CurtisNewbie/qkserve/releases/download/$version/qkserve_linux_$version"
 tmp="/tmp/qkserve"
 qkserve="/usr/local/bin/qkserve"

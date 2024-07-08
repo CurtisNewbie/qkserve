@@ -9,11 +9,20 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync/atomic"
+	"time"
 )
 
 var (
-	File = flag.String("file", "", "file")
-	Port = flag.Int("port", 6666, "port")
+	File    = flag.String("file", "", "file")
+	Port    = flag.Int("port", 8080, "port")
+	OneTime = flag.Bool("one-time", true, "one time use")
+)
+
+var (
+	GracefulShutdown = 5 * time.Second
+
+	Stopped int32 = 0
 )
 
 func main() {
@@ -29,6 +38,12 @@ func main() {
 }
 
 func ServeFile(w http.ResponseWriter, req *http.Request) {
+	if *OneTime && !atomic.CompareAndSwapInt32(&Stopped, 0, 1) {
+		fmt.Println("Server stopped")
+		w.WriteHeader(404)
+		return
+	}
+
 	byt, err := os.ReadFile(*File)
 	if err != nil {
 		fmt.Printf("Failed to read file, %v\n", err)
@@ -41,6 +56,15 @@ func ServeFile(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		fmt.Printf("Failed to write response, %v\n", err)
 		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if *OneTime {
+		fmt.Printf("Stopping server, server exit in %v\n", GracefulShutdown)
+		go func() {
+			time.Sleep(GracefulShutdown)
+			os.Exit(0)
+		}()
 	}
 }
 

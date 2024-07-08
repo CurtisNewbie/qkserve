@@ -8,5 +8,5 @@ curl https://raw.githubusercontent.com/CurtisNewbie/qkserve/main/tools/centos_do
 
 # curl https://raw.githubusercontent.com/CurtisNewbie/qkserve/main/tools/centos_download_cn.sh | bash
 
-./qkserve -file "my_file.txt" -port 8080
+qkserve -file "my_file.txt" -port 8080
 ```

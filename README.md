@@ -3,7 +3,8 @@
 For CentOS, e.g.,
 
 ```bash
-curl https://raw.githubusercontent.com/CurtisNewbie/qkserve/main/tools/centos_cn.sh | bash -s "myfile.txt"
+# Download qkserve (linux):
+curl https://raw.githubusercontent.com/CurtisNewbie/qkserve/main/tools/centos_download.sh
 
-curl https://raw.githubusercontent.com/CurtisNewbie/qkserve/main/tools/centos.sh | bash -s "myfile.txt"
+./qkserve -file "my_file.txt" -port 8080
 ```

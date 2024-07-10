@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"math/rand"
 	"net"
 	"net/http"
 	"net/url"
@@ -16,13 +17,14 @@ import (
 var (
 	File    = flag.String("file", "", "file")
 	Port    = flag.Int("port", 80, "port")
-	OneTime = flag.Bool("one-time", true, "one time use")
+	OneTime = flag.Bool("one-time", true, "file served for one time only")
 )
 
 var (
-	GracefulShutdown = 5 * time.Second
+	GracefulShutdown = 2 * time.Second
 
 	Stopped int32 = 0
+	digits        = "0123456789"
 )
 
 func main() {
@@ -32,13 +34,14 @@ func main() {
 		return
 	}
 
-	http.HandleFunc("/", ServeFile)
-	fmt.Printf("Download file at: http://%v:%v\n", GetLocalIPV4(), *Port)
+	rtk := RandNum(15)
+	http.HandleFunc("/"+rtk, ServeFile)
+	fmt.Printf("\nDownload file at: http://%v:%v/%v\n", GetLocalIPV4(), *Port, rtk)
 	http.ListenAndServe(fmt.Sprintf("0.0.0.0:%d", *Port), nil)
 }
 
 func ServeFile(w http.ResponseWriter, req *http.Request) {
-	if *OneTime && !atomic.CompareAndSwapInt32(&Stopped, 0, 1) {
+	if *OneTime && atomic.LoadInt32(&Stopped) != 0 {
 		fmt.Println("Server stopped")
 		w.WriteHeader(404)
 		return
@@ -59,9 +62,13 @@ func ServeFile(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	atomic.StoreInt32(&Stopped, 1)
 	if *OneTime {
-		fmt.Printf("Stopping server, server exit in %v\n", GracefulShutdown)
+		if fl, ok := w.(http.Flusher); ok {
+			fl.Flush()
+		}
 		go func() {
+			fmt.Printf("Server exit in %v\n", GracefulShutdown)
 			time.Sleep(GracefulShutdown)
 			os.Exit(0)
 		}()
@@ -83,4 +90,19 @@ func GetLocalIPV4() string {
 		}
 	}
 	return ""
+}
+
+func doRand(n int, set []rune) string {
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = set[rand.Intn(len(set))]
+	}
+	return string(b)
+}
+
+// Generate random numeric string with specified length
+//
+// the generated string will contains [0-9]
+func RandNum(n int) string {
+	return doRand(n, []rune(digits))
 }
